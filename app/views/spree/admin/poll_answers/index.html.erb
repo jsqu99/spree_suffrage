@@ -1,0 +1,30 @@
+<% content_for :page_title do %>
+  <%= t(:poll_answers) %> - <%= @poll.question %>
+<% end %>
+
+
+<% content_for :page_actions do %>
+  <li><%= button_link_to t(:back_to_polls_list), admin_polls_url, :icon => 'icon-arrow-left' %></li>
+<% end %>
+
+<table class="index" id="listing_poll_answers">
+  <colgroup>
+    <col style="width: 45%">
+    <col style="width: 45%">
+  </colgroup>
+  <thead>
+    <tr>
+      <th><%= t(:answer) %></th>
+      <th><%= t(:tally) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @poll_answers.each do |answer| %>
+      <tr class="align-center">
+        <td><%= answer.answer %></td>
+        <td><%= answer.tally %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

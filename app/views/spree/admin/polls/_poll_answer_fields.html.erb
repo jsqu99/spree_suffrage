@@ -1,0 +1,6 @@
+<tr class="<%= cycle('odd', 'even')%>">
+  <td><%= f.text_field :answer %>
+    <%= f.hidden_field :_destroy %>
+    <%= link_to "remove", '#', class: "remove_nested_fields" %>
+  </td>
+</tr>

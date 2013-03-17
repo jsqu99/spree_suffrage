@@ -1,0 +1,20 @@
+  <%# they have not yet voted %>
+  <% @poll = defined?(poll) ? poll : Spree::Poll.current %> <%# use the inbound local if provided, otherwise fallback %>
+
+  <% if @poll %>
+    <h6><%= @poll.question %></h6>
+    <ul id="new_poll_list">
+      <%= form_tag :vote %>
+        <% @poll.poll_answers.each do |answer| %>
+          <li><%= radio_button_tag :poll_answer_id, answer.id %><%= label_tag answer.answer%></li>
+        <% end %>
+        <%= submit_tag t(:vote) %>
+      </form>
+
+    </ul>
+
+    <% if @poll.allow_view_results_without_voting  && @poll.has_results? %>
+      <%= link_to t(:view_poll_results), poll_results_path(@poll)%>
+    <% end %>
+  <% end %>
+

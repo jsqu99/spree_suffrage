@@ -1,0 +1,3 @@
+$("#new_poll").html('<%= escape_javascript(render :template => "spree/admin/polls/new", :formats => [:html], :handlers => [:erb]) %>');
+$("#table-filter").hide();
+$("#admin_new_poll").parent().hide();

@@ -1,0 +1,26 @@
+<div id="poll">
+
+
+<%# have we?:
+      1) already said "It's ok to view the results without voting"
+      2) already voted in this poll  
+%>
+
+<% if session[:vote_id] %>
+  <%# for now let's assume this session value is the 'current' poll %>
+  <%# TODO: let's match it to the inbound local variable %>
+
+  <% @poll = (Spree::PollVote.find(session[:vote_id]) rescue nil).try(:poll) %>  <%# protext against deleted polls in session %>
+  <%= render 'spree/polls/poll_results', poll: @poll %>
+
+<% elsif session[:show_poll_results_without_voting_id] %>
+
+  <% @poll = Spree::Poll.find(session[:show_poll_results_without_voting_id]) %>
+
+  <%= render 'spree/polls/poll_results', poll: @poll %>
+
+<% else %>
+  <%= render 'spree/polls/new_poll' %>
+<% end %>
+
+</div>

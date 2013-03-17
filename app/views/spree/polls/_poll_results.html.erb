@@ -1,0 +1,8 @@
+<h6><%= poll.question %></h6>
+<ul id="poll_results_list">
+  <% poll.poll_answers.each do |answer| %>
+    <li><%= answer.answer %> - <%= answer.poll_votes.count %> </li>
+  <% end %>
+</ul>
+
+<% session[:show_poll_results_without_voting_id] = nil %>

@@ -1,11 +1,13 @@
 SpreeSuffrage
 =============
 
-nothing here yet.  move along
+[![Build Status](https://travis-ci.org/jsqu99/spree_suffrage.png)](https://travis-ci.org/jsqu99/spree_suffrage)
 
-suffrage = the right of voting
+Suffrage = the right of voting
 
 This is a spree extension that provides polling/voting capability
+
+Currently spree 2.0.0.beta (bleeding edge spree/master) is supported.
 
 
 Installation

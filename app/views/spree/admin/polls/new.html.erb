@@ -1,0 +1,30 @@
+<%= render :partial => 'spree/shared/error_messages', :locals => { :target => @poll } %>
+
+<%= form_for [:admin, @poll] do |f| %>
+
+<fieldset>
+  <legend align="center"><%= t(:new_poll) %></legend>
+
+  <%= f.field_container :name do %>
+    <%= f.label :name, t(:name) %> <span class="required">*</span><br />
+    <%= f.text_field :name, :class => 'fullwidth title' %>
+    <%= f.error_message_on :name %>
+  <% end %>
+
+  <div data-hook="new_poll_attrs" class="row">
+      <%= f.field_container :question do %>
+        <%= f.label :question, t(:question) %><span class="required">*</span><br />
+        <%= f.text_field :question, :size => 16, :class => 'fullwidth' %>
+        <%= f.error_message_on :question %>
+      <% end %>  
+
+      <%= f.field_container :allow_view_results_without_voting do %>
+        <%= f.check_box :allow_view_results_without_voting %>
+        <%= f.label :allow_view_results_without_voting, t(:allow_view_results_without_voting) %>
+      <% end %>
+  </div>
+  
+  <%= render :partial => 'spree/admin/shared/new_resource_links' %>
+  
+</fieldset>
+<% end %>

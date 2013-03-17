@@ -1,0 +1,38 @@
+<div data-hook="admin_poll_form_fields">
+  
+    <%= f.field_container :name do %>
+      <%= f.label :name, raw(t(:name) + content_tag(:span, ' *', :class => 'required')) %>
+      <%= f.text_field :name, :class => 'fullwidth title' %>
+      <%= f.error_message_on :name %>
+    <% end %>
+
+    <%= f.field_container :question do %>
+      <%= f.label :question, t(:question) %>
+      <%= f.text_field :question, :class => 'fullwidth title' %>
+      <%= f.error_message_on :question %>
+    <% end %>
+
+    <%= f.field_container :allow_view_results_without_voting do %>
+      <%= f.check_box :allow_view_results_without_voting %>
+      <%= f.label :allow_view_results_without_voting, t(:allow_view_results_without_voting) %>
+    <% end %>
+
+  </div>
+
+<%# Placeholder for new poll_answers form %>
+
+<table class="index" id="listing_poll_answers">
+  <thead>
+    <tr data-hook="listing_poll_answers_header">
+      <th><%= t(:poll_answers) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= f.fields_for :poll_answers do |builder| %>
+      <%= render 'poll_answer_fields', f: builder %>
+    <% end %>
+  </tbody>
+  <tbody id="new_poll_answers">
+    <%= link_to_add_nested_fields "Add Answer", f, :poll_answers %>
+  </tbody>
+</table>

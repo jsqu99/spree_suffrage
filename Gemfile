@@ -1,9 +1,7 @@
 source 'http://rubygems.org'
 
-#gem 'spree', github: 'spree/spree'
+gem 'spree', github: 'spree/spree'
 
-# master is jacked right now, so going w/ a known, reasonably 'stable' 2.0.0.beta version
-gem 'spree', github: 'jsqu99/spree', branch: 'fix-shipping-methods-index'
 # Provides basic authentication functionality for testing parts of your engine
 gem 'spree_auth_devise', :git => "git://github.com/spree/spree_auth_devise"
 
@@ -30,3 +28,13 @@ group :test do
  # gem 'webmock', '1.8.11'
 #  gem 'email_spec', '1.4.0'
 end
+
+group :development do
+  gem 'fuubar'
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'rb-inotify', :require => false
+  gem 'rb-fsevent', :require => false
+  gem 'rb-fchange', :require => false
+end
+

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Products" do
+describe "Polls" do
   stub_authorization!
 
   context "as admin user" do
@@ -8,226 +8,137 @@ describe "Products" do
       visit spree.admin_path
     end
 
-    context "listing products" do
-      context "sorting" do
-        before do
-          create(:product, :name => 'apache baseball cap', :price => 10)
-          create(:product, :name => 'zomg shirt', :price => 5)
-        end
+    context "listing polls" do
+      before do
+        create(:poll, :name => 'am i handsome')
+        create(:poll, :name => 'am i ugly')
+      end
 
-        it "should list existing products with correct sorting by name" do
-          click_link "Products"
+      context "sorting" do
+        it "should list existing polls with correct sorting by name" do
+          click_link "Polls"
+
           # Name ASC
-          within_row(1) { page.should have_content('apache baseball cap') }
-          within_row(2) { page.should have_content("zomg shirt") }
+          within_row(1) { page.should have_content('handsome') }
+          within_row(2) { page.should have_content("ugly") }
 
           # Name DESC
-          click_link "admin_products_listing_name_title"
-          within_row(1) { page.should have_content("zomg shirt")  }
-          within_row(2) { page.should have_content('apache baseball cap') }
-        end
-
-        it "should list existing products with correct sorting by price" do
-          click_link "Products"
-
-          # Name ASC (default)
-          within_row(1) { page.should have_content('apache baseball cap') }
-          within_row(2) { page.should have_content("zomg shirt") }
-
-          # Price DESC
-          click_link "admin_products_listing_price_title"
-          within_row(1) { page.should have_content("zomg shirt") }
-          within_row(2) { page.should have_content('apache baseball cap') }
+          click_link "admin_polls_listing_name_title"
+          within_row(1) { page.should have_content("ugly")  }
+          within_row(2) { page.should have_content('handsome') }
         end
       end
+
+      context 'delete a poll' do
+        before do
+          @poll = create(:poll, :name => 'am i smart')
+        end
+
+        pending 'should allow you to delete', js: true do
+
+          click_link "Polls"
+          page.find(".delete-resource").click
+
+          page.driver.browser.switch_to.alert.accept
+
+          # I can't figure out why i need to reload the page after a binding.pry to get the flash message to show up
+          page.should have_content("successfully removed!")
+          Spree::Poll.last.should_not == @poll
+        end
+      end
+
+      context 'view the results of a poll' do
+        before do
+          @poll = create(:poll, :name => 'am i smart')
+        end
+
+        it 'should allow you to view the result' do
+
+          click_link "Polls"
+binding.pry
+          find('#listing_polls tbody tr:nth-child(1) td:nth-child(1) a').click
+          page.should have_content("#listing_poll_answers")
+        end
+      end
+
     end
 
-    context "searching products" do
-      it "should be able to search deleted products", :js => true do
-        create(:product, :name => 'apache baseball cap', :deleted_at => "2011-01-06 18:21:13")
-        create(:product, :name => 'zomg shirt')
-
-        click_link "Products"
-        page.should have_content("zomg shirt")
-        page.should_not have_content("apache baseball cap")
-        check "Show Deleted"
-        click_icon :search
-        page.should have_content("zomg shirt")
-        page.should have_content("apache baseball cap")
-        uncheck "Show Deleted"
-        click_icon :search
-        page.should have_content("zomg shirt")
-        page.should_not have_content("apache baseball cap")
-      end
-
-      it "should be able to search products by their properties" do
-        create(:product, :name => 'apache baseball cap', :sku => "A100")
-        create(:product, :name => 'apache baseball cap2', :sku => "B100")
-        create(:product, :name => 'zomg shirt')
-
-        click_link "Products"
-        fill_in "q_name_cont", :with => "ap"
-        click_icon :search
-        page.should have_content("apache baseball cap")
-        page.should have_content("apache baseball cap2")
-        page.should_not have_content("zomg shirt")
-
-        fill_in "q_variants_including_master_sku_cont", :with => "A1"
-        click_icon :search
-        page.should have_content("apache baseball cap")
-        page.should_not have_content("apache baseball cap2")
-        page.should_not have_content("zomg shirt")
-      end
-    end
-
-    context "creating a new product from a prototype" do
-      def build_option_type_with_values(name, values)
-        ot = FactoryGirl.create(:option_type, :name => name)
-        values.each do |val|
-          ot.option_values.create({:name => val.downcase, :presentation => val}, :without_protection => true)
-        end
-        ot
-      end
-
-      let(:product_attributes) do
-        # FactoryGirl.attributes_for is un-deprecated!
-        #   https://github.com/thoughtbot/factory_girl/issues/274#issuecomment-3592054
-        FactoryGirl.attributes_for(:simple_product)
-      end
-
-      let(:prototype) do
-        size = build_option_type_with_values("size", %w(Small Medium Large))
-        FactoryGirl.create(:prototype, :name => "Size", :option_types => [ size ])
-      end
-
-      let(:option_values_hash) do
-        hash = {}
-        prototype.option_types.each do |i|
-          hash[i.id.to_s] = i.option_value_ids
-        end
-        hash
-      end
-
+    context "creating a new poll" do
       before(:each) do
-        @option_type_prototype = prototype
-        @property_prototype = create(:prototype, :name => "Random")
-        click_link "Products"
-        click_link "admin_new_product"
-        within('#new_product') do
-         page.should have_content("SKU")
-        end
+        click_link "Polls"
+        click_link "admin_new_poll"
+
       end
 
-      it "should allow an admin to create a new product and variants from a prototype", :js => true do
-        fill_in "product_name", :with => "Baseball Cap"
-        fill_in "product_sku", :with => "B100"
-        fill_in "product_price", :with => "100"
-        fill_in "product_available_on", :with => "2012/01/24"
-        select "Size", :from => "Prototype"
-        check "Large"
+      it "should allow an admin to create a new poll", js: true do
+        within('#new_poll') do
+         page.should have_content("uestion")
+        end
+
+        fill_in "poll_name", :with => "Are you ugly"
+        fill_in "poll_question", :with => "Are you ugly?"
         click_button "Create"
         page.should have_content("successfully created!")
-        Spree::Product.last.variants.length.should == 1
       end
 
-      it "should not display variants when prototype does not contain option types", :js => true do
-        select "Random", :from => "Prototype"
-
-        fill_in "product_name", :with => "Baseball Cap"
-
-        page.should_not have_content("Variants")
-      end
-
-      it "should keep option values selected if validation fails", :js => true do
-        select "Size", :from => "Prototype"
-        check "Large"
-        click_button "Create"
-        page.should have_content("Name can't be blank")
-        field_labeled("Size").should be_checked
-        field_labeled("Large").should be_checked
-        field_labeled("Small").should_not be_checked
-      end
-
-    end
-
-    context "creating a new product" do
-      before(:each) do
-        click_link "Products"
-        click_link "admin_new_product"
-        within('#new_product') do
-         page.should have_content("SKU")
-        end
-      end
-
-      it "should allow an admin to create a new product", :js => true do
-        fill_in "product_name", :with => "Baseball Cap"
-        fill_in "product_sku", :with => "B100"
-        fill_in "product_price", :with => "100"
-        fill_in "product_available_on", :with => "2012/01/24"
-        click_button "Create"
-        page.should have_content("successfully created!")
-        click_button "Update"
-        page.should have_content("successfully updated!")
-      end
-
-      it "should show validation errors", :js => true do
+      it "should show validation errors" do
         click_button "Create"
         page.should have_content("Name can't be blank")
       end
+    end
 
-      # Regression test for #2097
-      it "can set the count on hand to a null value", :js => true do
-        fill_in "product_name", :with => "Baseball Cap"
-        fill_in "product_price", :with => "100"
-        click_button "Create"
-        page.should have_content("successfully created!")
+    context 'updating a poll' do
+      let(:poll) { create(:poll) }
+
+      before do
+        visit spree.admin_poll_path(poll)
+      end
+
+      it 'should allow you to update' do
+        fill_in "poll_question", :with => "are you a good person?"
         click_button "Update"
         page.should have_content("successfully updated!")
+        Spree::Poll.last.question.should == 'are you a good person?'
       end
-    end
 
-    context "cloning a product", :js => true do
-      it "should allow an admin to clone a product" do
-        create(:product)
+      context "configuring answers" do
+        it 'should allow you to see all answers' do
 
-        click_link "Products"
-        within_row(1) do
-          click_icon :copy
+          find('#listing_poll_answers tbody tr:nth-child(1)').text.should include('Yes')
+          find('#listing_poll_answers tbody tr:nth-child(2)').text.should include('No')
+
+          # TODO: ask scott why the above works but this:
+
+          # within("#listing_poll_answers tbody") do
+          #  within_row(1) { page.should have_content("Yes") }
+          #  within_row(2) { page.should have_content("No") }
+          #end
+
+          # yielded:
+
+          # Failure/Error: within_row(1) { page.should have_content("Yes") }
+          # Capybara::ElementNotFound:
+          # Unable to find css "table.index tbody tr:nth-child(1)"
+          # end TODO
+
+          visit spree.admin_poll_path(poll)
         end
 
-        page.should have_content("Product has been cloned")
-      end
-
-      context "cloning a deleted product" do
-        it "should allow an admin to clone a deleted product" do
-          create(:product, :name => "apache baseball cap")
-
-          click_link "Products"
-          check "Show Deleted"
-          click_button "Search"
-
-          page.should have_content("apache baseball cap")
-
-          within_row(1) do
-            click_icon :copy
-          end
-
-          page.should have_content("Product has been cloned")
+        pending 'should allow you to add an answer', js: true do
+          visit spree.admin_poll_path(poll)
+          click_link ".add_nested_fields"
+          fill_in "poll_answer_answer", :with => "green"
+        end
+        
+        pending 'should allow you to remove an answer' do
+          visit spree.admin_poll_path(poll)
+          click_button "Update"
+        end
+        pending 'should allow you to edit an answer' do
+          visit spree.admin_poll_path(poll)
+          click_button "Update"
         end
       end
     end
-
-    context 'updating a product', :js => true do
-      let(:product) { create(:product) }
-
-      it 'should parse correctly available_on' do
-        visit spree.admin_product_path(product)
-        fill_in "product_available_on", :with => "2012/12/25"
-        click_button "Update"
-        page.should have_content("successfully updated!")
-        Spree::Product.last.available_on.should == 'Tue, 25 Dec 2012 00:00:00 UTC +00:00'
-      end
-    end
-
   end
 end

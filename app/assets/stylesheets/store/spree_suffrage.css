@@ -1,3 +1,8 @@
 /*
- *= require store/spree_core
+ *= require store/spree_frontend
+ *= require_self
 */
+
+#poll ul {
+  list-style: none;
+}
