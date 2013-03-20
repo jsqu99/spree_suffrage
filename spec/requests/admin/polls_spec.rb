@@ -55,7 +55,6 @@ describe "Polls" do
         it 'should allow you to view the result' do
 
           click_link "Polls"
-binding.pry
           find('#listing_polls tbody tr:nth-child(1) td:nth-child(1) a').click
           page.should have_content("#listing_poll_answers")
         end
