@@ -16,6 +16,19 @@ Installation
     gem 'spree_suffrage', github: 'jsqu99/spree_suffrage'
     bundle exec rails g spree_suffrage:install
 
+Usage
+------
+
+After creating a poll in the admin app, you'll want to determine how/where you want to include the [poll partial](https://github.com/jsqu99/spree_suffrage/blob/master/app/views/spree/polls/_poll.html.erb)
+
+
+This is an example I use in the specs to insert the partial:
+
+    Deface::Override.new(name: 'add_poll_to_home_page', 
+                         virtual_path: 'spree/shared/_sidebar', 
+                         insert_top: '#sidebar[data-hook],[data-hook=sidebar]', 
+                         partial: 'spree/polls/poll')
+
 Testing
 -------
 
