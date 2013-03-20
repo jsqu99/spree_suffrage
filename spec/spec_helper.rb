@@ -63,7 +63,7 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include Spree::TestingSupport::UrlHelpers
   config.include Spree::TestingSupport::ControllerRequests, :type => :controller
-  config.include Devise::TestHelpers, :type => [:controller, :requests]
+  config.include Devise::TestHelpers, :type => [:controller, :requests] # this doesn't give me sign_in, and not sure why
   config.include Rack::Test::Methods, :type => :requests
 
   config.before(:each) do

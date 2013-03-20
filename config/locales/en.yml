@@ -4,5 +4,6 @@
 en:
   thanks_for_voting: "Thanks for voting!"
   problem_voting: "Sorry, there was a problem registering your vote.  Have you already voted in this poll?"
+  view_poll_results: "View poll results"
   sorry_you_must_vote_to_view: "Sorry, you must vote in order to view the poll results"
   vote: "Vote"
