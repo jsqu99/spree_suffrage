@@ -10,7 +10,6 @@ module Spree
         session[:vote_id] = @vote.id
         flash[:notice] = I18n.t(:thanks_for_voting)
       else
-binding.pry
         flash[:error] = I18n.t(:problem_voting)
       end
       redirect_to(:back) 
