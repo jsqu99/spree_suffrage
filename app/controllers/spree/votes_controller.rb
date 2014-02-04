@@ -12,7 +12,7 @@ module Spree
       else
         flash[:error] = I18n.t(:problem_voting)
       end
-      redirect_to(:back) 
+      redirect_to(:back)
     end
   end
 end
